@@ -16,19 +16,21 @@ def complex_yaml_path():
 def test_full_conversion_pipeline(complex_yaml_path):
     """Test the complete conversion pipeline from YAML to Cypher."""
     # Create a temporary file for output
-    with tempfile.NamedTemporaryFile(suffix='.cypher', delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(
+        suffix=".cypher", delete=False
+    ) as temp_file:
         output_path = temp_file.name
 
     try:
         # Run the main function with the sample file
-        exit_code = main([complex_yaml_path, '-o', output_path])
+        exit_code = main([complex_yaml_path, "-o", output_path])
 
         # Check that the conversion was successful
         assert exit_code == 0
         assert os.path.exists(output_path)
 
         # Check the content of the output file
-        with open(output_path, 'r') as f:
+        with open(output_path, "r") as f:
             content = f.read()
 
             # Check for node statements
@@ -42,11 +44,11 @@ def test_full_conversion_pipeline(complex_yaml_path):
             assert "CREATE (company1)-[:PRODUCES" in content
 
             # Check that all nodes and relationships are present
-            lines = content.strip().split('\n')
+            lines = content.strip().split("\n")
             assert len(lines) == 12  # 5 nodes + 7 relationships
 
             # Check that each line ends with a semicolon
-            assert all(line.endswith(';') for line in lines)
+            assert all(line.endswith(";") for line in lines)
 
     finally:
         # Clean up
@@ -88,15 +90,21 @@ def test_converter_class_with_complex_file(complex_yaml_path):
 
 
 def test_idempotency(complex_yaml_path):
-    """Test that multiple conversions of the same file produce the same output."""
+    """
+    Test that multiple conversions of the same file produce the same output.
+    """
     converter = YAML2Cypher()
 
     # First conversion
-    with tempfile.NamedTemporaryFile(suffix='.cypher', delete=False) as temp_file1:
+    with tempfile.NamedTemporaryFile(
+        suffix=".cypher", delete=False
+    ) as temp_file1:
         output_path1 = temp_file1.name
 
     # Second conversion
-    with tempfile.NamedTemporaryFile(suffix='.cypher', delete=False) as temp_file2:
+    with tempfile.NamedTemporaryFile(
+        suffix=".cypher", delete=False
+    ) as temp_file2:
         output_path2 = temp_file2.name
 
     try:
