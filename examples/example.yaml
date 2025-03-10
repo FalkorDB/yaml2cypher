@@ -1,0 +1,46 @@
+# Example YAML file for yaml2cypher
+nodes:
+  person1:
+    labels: Person
+    name: "John Doe"
+    age: 30
+    active: true
+    skills:
+      - "Python"
+      - "Graph Databases"
+  
+  person2:
+    labels: Person
+    name: "Jane Smith"
+    age: 28
+    active: true
+    skills:
+      - "Cypher"
+      - "YAML"
+  
+  company1:
+    labels: 
+      - Company
+      - Organization
+    name: "Graph Solutions Inc."
+    founded: 2010
+    location: "San Francisco"
+
+relationships:
+  - from: person1
+    to: person2
+    type: KNOWS
+    since: 2018
+    strength: 0.8
+  
+  - from: person1
+    to: company1
+    type: WORKS_FOR
+    position: "Software Engineer"
+    since: 2019
+  
+  - from: person2
+    to: company1
+    type: WORKS_FOR
+    position: "Data Scientist"
+    since: 2020
