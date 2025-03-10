@@ -21,7 +21,7 @@ pip install yaml2cypher
 ### Using Poetry (for development)
 
 ```bash
-git clone https://github.com/yourusername/yaml2cypher.git
+git clone https://github.com/falkordb/yaml2cypher.git
 cd yaml2cypher
 poetry install
 ```
@@ -29,14 +29,14 @@ poetry install
 To run the tool using Poetry:
 
 ```bash
-poetry run yaml2cypher example.yaml
+poetry run yaml2cypher examples/example.yaml
 ```
 
 Or activate the virtual environment:
 
 ```bash
 poetry shell
-yaml2cypher example.yaml
+yaml2cypher examples/example.yaml
 ```
 
 ## Usage
@@ -46,21 +46,21 @@ yaml2cypher example.yaml
 Convert a YAML file to Cypher:
 
 ```bash
-yaml2cypher example.yaml
+yaml2cypher examples/example.yaml
 ```
 
-This will create `example.cypher` with the generated Cypher queries.
+This will create `examples/example.cypher` with the generated Cypher queries.
 
 Specify an output file:
 
 ```bash
-yaml2cypher example.yaml -o output.cypher
+yaml2cypher examples/example.yaml -o output.cypher
 ```
 
 Enable verbose logging:
 
 ```bash
-yaml2cypher example.yaml -v
+yaml2cypher examples/example.yaml -v
 ```
 
 ### Python API
