@@ -16,10 +16,16 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     Returns:
         Parsed arguments namespace
     """
-    parser = argparse.ArgumentParser(description='Convert YAML files to Cypher queries')
-    parser.add_argument('yaml_file', help='Path to YAML file')
-    parser.add_argument('-o', '--output', help='Output Cypher file (default: <input>.cypher)')
-    parser.add_argument('-v', '--verbose', action='store_true', help='Verbose output')
+    parser = argparse.ArgumentParser(
+        description="Convert YAML files to Cypher queries"
+    )
+    parser.add_argument("yaml_file", help="Path to YAML file")
+    parser.add_argument(
+        "-o", "--output", help="Output Cypher file (default: <input>.cypher)"
+    )
+    parser.add_argument(
+        "-v", "--verbose", action="store_true", help="Verbose output"
+    )
     return parser.parse_args(args)
 
 
@@ -45,7 +51,9 @@ def main(args: Optional[List[str]] = None) -> int:
 
     try:
         converter = YAML2Cypher()
-        cypher_statements = converter.yaml_file_to_cypher(parsed_args.yaml_file)
+        cypher_statements = converter.yaml_file_to_cypher(
+            parsed_args.yaml_file
+        )
         converter.write_cypher_to_file(cypher_statements, parsed_args.output)
         print(f"Converted {parsed_args.yaml_file} to {parsed_args.output}")
         return 0

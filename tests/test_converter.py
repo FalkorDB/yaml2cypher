@@ -20,13 +20,13 @@ def sample_yaml_data():
                 "labels": "Person",
                 "name": "John Doe",
                 "age": 30,
-                "active": True
+                "active": True,
             },
             "company1": {
                 "labels": ["Company", "Organization"],
                 "name": "ACME Inc.",
-                "founded": 1999
-            }
+                "founded": 1999,
+            },
         },
         "relationships": [
             {
@@ -34,16 +34,18 @@ def sample_yaml_data():
                 "to": "company1",
                 "type": "WORKS_FOR",
                 "since": 2015,
-                "position": "Developer"
+                "position": "Developer",
             }
-        ]
+        ],
     }
 
 
 @pytest.fixture
 def sample_yaml_file(sample_yaml_data):
     """Create a temporary YAML file for testing."""
-    with tempfile.NamedTemporaryFile(suffix='.yaml', delete=False, mode='w') as f:
+    with tempfile.NamedTemporaryFile(
+        suffix=".yaml", delete=False, mode="w"
+    ) as f:
         yaml.dump(sample_yaml_data, f)
         temp_file_path = f.name
 
@@ -78,13 +80,19 @@ def test_format_property_value(converter):
     assert converter._format_property_value([1, 2, 3]) == "[1, 2, 3]"
 
     # Test dictionaries
-    assert converter._format_property_value({"name": "John", "age": 30}) == "{name: 'John', age: 30}"
+    assert (
+        converter._format_property_value({"name": "John", "age": 30})
+        == "{name: 'John', age: 30}"
+    )
 
 
 def test_generate_node_properties(converter):
     """Test generation of node properties for Cypher."""
     properties = {"name": "John", "age": 30, "active": True}
-    assert converter._generate_node_properties(properties) == "{name: 'John', age: 30, active: true}"
+    assert (
+        converter._generate_node_properties(properties)
+        == "{name: 'John', age: 30, active: true}"
+    )
 
     # Test empty properties
     assert converter._generate_node_properties({}) == ""
@@ -94,22 +102,39 @@ def test_convert_node(converter):
     """Test conversion of a node to Cypher CREATE statement."""
     # Test with single label
     node_data = {"labels": "Person", "name": "John", "age": 30}
-    assert converter._convert_node("p1", node_data) == "CREATE (p1:Person {name: 'John', age: 30})"
+    assert (
+        converter._convert_node("p1", node_data)
+        == "CREATE (p1:Person {name: 'John', age: 30})"
+    )
 
     # Test with multiple labels
     node_data = {"labels": ["Person", "Employee"], "name": "John", "age": 30}
-    assert converter._convert_node("p1", node_data) == "CREATE (p1:Person:Employee {name: 'John', age: 30})"
+    assert (
+        converter._convert_node("p1", node_data)
+        == "CREATE (p1:Person:Employee {name: 'John', age: 30})"
+    )
 
     # Test with no labels
     node_data = {"name": "John", "age": 30}
-    assert converter._convert_node("p1", node_data) == "CREATE (p1 {name: 'John', age: 30})"
+    assert (
+        converter._convert_node("p1", node_data)
+        == "CREATE (p1 {name: 'John', age: 30})"
+    )
 
 
 def test_convert_relationship(converter):
     """Test conversion of a relationship to Cypher CREATE statement."""
     # Test with properties
-    rel_data = {"from": "p1", "to": "c1", "type": "WORKS_FOR", "since": 2020, "position": "Manager"}
-    expected = "CREATE (p1)-[:WORKS_FOR {since: 2020, position: 'Manager'}]->(c1)"
+    rel_data = {
+        "from": "p1",
+        "to": "c1",
+        "type": "WORKS_FOR",
+        "since": 2020,
+        "position": "Manager",
+    }
+    expected = (
+        "CREATE (p1)-[:WORKS_FOR {since: 2020, position: 'Manager'}]->(c1)"
+    )
     assert converter._convert_relationship(rel_data) == expected
 
     # Test without properties
@@ -127,9 +152,20 @@ def test_convert_yaml_to_cypher(converter, sample_yaml_data):
     statements = converter.convert_yaml_to_cypher(sample_yaml_data)
 
     assert len(statements) == 3
-    assert statements[0] == "CREATE (person1:Person {name: 'John Doe', age: 30, active: true})"
-    assert statements[1] == "CREATE (company1:Company:Organization {name: 'ACME Inc.', founded: 1999})"
-    assert statements[2] == "CREATE (person1)-[:WORKS_FOR {since: 2015, position: 'Developer'}]->(company1)"
+    assert (
+        statements[0]
+        == "CREATE (person1:Person {name: 'John Doe', age: 30, active: true})"
+    )
+    assert (
+        statements[1]
+        == ("CREATE (company1:Company:Organization {name: 'ACME Inc.', "
+            "founded: 1999})")
+    )
+    assert (
+        statements[2]
+        == ("CREATE (person1)-[:WORKS_FOR {since: 2015, "
+            "position: 'Developer'}]->(company1)")
+    )
 
 
 def test_yaml_file_to_cypher(converter, sample_yaml_file):
@@ -145,7 +181,9 @@ def test_write_cypher_to_file(converter, sample_yaml_data):
     """Test writing Cypher statements to a file."""
     statements = converter.convert_yaml_to_cypher(sample_yaml_data)
 
-    with tempfile.NamedTemporaryFile(suffix='.cypher', delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(
+        suffix=".cypher", delete=False
+    ) as temp_file:
         output_path = temp_file.name
 
     try:
@@ -154,16 +192,16 @@ def test_write_cypher_to_file(converter, sample_yaml_data):
         # Check that file exists and contains expected content
         assert os.path.exists(output_path)
 
-        with open(output_path, 'r') as f:
+        with open(output_path, "r") as f:
             content = f.read()
             assert "CREATE (person1:Person" in content
             assert "CREATE (company1:Company:Organization" in content
             assert "CREATE (person1)-[:WORKS_FOR" in content
 
             # Check for semicolons
-            lines = content.strip().split('\n')
+            lines = content.strip().split("\n")
             assert len(lines) == 3
-            assert all(line.endswith(';') for line in lines)
+            assert all(line.endswith(";") for line in lines)
 
     finally:
         if os.path.exists(output_path):

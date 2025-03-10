@@ -25,28 +25,22 @@ def sample_yaml_file():
     """Create a temporary YAML file for testing."""
     data = {
         "nodes": {
-            "person1": {
-                "labels": "Person",
-                "name": "John Doe",
-                "age": 30
-            },
-            "person2": {
-                "labels": "Person",
-                "name": "Jane Smith",
-                "age": 28
-            }
+            "person1": {"labels": "Person", "name": "John Doe", "age": 30},
+            "person2": {"labels": "Person", "name": "Jane Smith", "age": 28},
         },
         "relationships": [
             {
                 "from": "person1",
                 "to": "person2",
                 "type": "KNOWS",
-                "since": 2018
+                "since": 2018,
             }
-        ]
+        ],
     }
 
-    with tempfile.NamedTemporaryFile(suffix='.yaml', delete=False, mode='w') as f:
+    with tempfile.NamedTemporaryFile(
+        suffix=".yaml", delete=False, mode="w"
+    ) as f:
         yaml.dump(data, f)
         temp_file_path = f.name
 
@@ -59,7 +53,7 @@ def sample_yaml_file():
 
 def test_cli_default_output(sample_yaml_file):
     """Test CLI with default output filename."""
-    expected_output = os.path.splitext(sample_yaml_file)[0] + '.cypher'
+    expected_output = os.path.splitext(sample_yaml_file)[0] + ".cypher"
 
     # Delete the output file if it already exists
     if os.path.exists(expected_output):
@@ -71,13 +65,16 @@ def test_cli_default_output(sample_yaml_file):
 
         # Check exit code and console output
         assert exit_code == 0
-        assert f"Converted {sample_yaml_file} to {expected_output}" in out.getvalue()
+        assert (
+            f"Converted {sample_yaml_file} to {expected_output}"
+            in out.getvalue()
+        )
 
         # Check that output file exists
         assert os.path.exists(expected_output)
 
         # Check file content
-        with open(expected_output, 'r') as f:
+        with open(expected_output, "r") as f:
             content = f.read()
             assert "CREATE (person1:Person" in content
             assert "CREATE (person2:Person" in content
@@ -91,7 +88,9 @@ def test_cli_default_output(sample_yaml_file):
 
 def test_cli_custom_output(sample_yaml_file):
     """Test CLI with custom output filename."""
-    with tempfile.NamedTemporaryFile(suffix='.cypher', delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(
+        suffix=".cypher", delete=False
+    ) as temp_file:
         output_path = temp_file.name
 
     # Close and remove the temp file as we just want the name
@@ -99,17 +98,19 @@ def test_cli_custom_output(sample_yaml_file):
 
     try:
         with captured_output() as (out, err):
-            exit_code = main([sample_yaml_file, '-o', output_path])
+            exit_code = main([sample_yaml_file, "-o", output_path])
 
         # Check exit code and console output
         assert exit_code == 0
-        assert f"Converted {sample_yaml_file} to {output_path}" in out.getvalue()
+        assert (
+            f"Converted {sample_yaml_file} to {output_path}" in out.getvalue()
+        )
 
         # Check that output file exists
         assert os.path.exists(output_path)
 
         # Check file content
-        with open(output_path, 'r') as f:
+        with open(output_path, "r") as f:
             content = f.read()
             assert "CREATE (person1:Person" in content
             assert "CREATE (person2:Person" in content
@@ -123,7 +124,9 @@ def test_cli_custom_output(sample_yaml_file):
 
 def test_cli_verbose_mode(sample_yaml_file):
     """Test CLI with verbose flag."""
-    with tempfile.NamedTemporaryFile(suffix='.cypher', delete=False) as temp_file:
+    with tempfile.NamedTemporaryFile(
+        suffix=".cypher", delete=False
+    ) as temp_file:
         output_path = temp_file.name
 
     # Close and remove the temp file as we just want the name
@@ -131,13 +134,16 @@ def test_cli_verbose_mode(sample_yaml_file):
 
     try:
         with captured_output() as (out, err):
-            exit_code = main([sample_yaml_file, '-o', output_path, '-v'])
+            exit_code = main([sample_yaml_file, "-o", output_path, "-v"])
 
         # Check exit code and console output
         assert exit_code == 0
-        assert f"Converted {sample_yaml_file} to {output_path}" in out.getvalue()
+        assert (
+            f"Converted {sample_yaml_file} to {output_path}" in out.getvalue()
+        )
 
-        # Verbose mode should produce more output, but this is hard to test directly
+        # Verbose mode should produce more output,
+        # but this is hard to test directly
         # as it depends on the logging implementation
 
     finally:
@@ -148,7 +154,7 @@ def test_cli_verbose_mode(sample_yaml_file):
 
 def test_cli_nonexistent_file():
     """Test CLI with a file that doesn't exist."""
-    nonexistent_file = '/path/to/nonexistent/file.yaml'
+    nonexistent_file = "/path/to/nonexistent/file.yaml"
 
     with captured_output() as (out, err):
         exit_code = main([nonexistent_file])
