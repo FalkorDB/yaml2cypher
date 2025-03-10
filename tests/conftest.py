@@ -3,7 +3,6 @@ Pytest configuration file for yaml2cypher tests.
 
 This file can contain shared fixtures and configuration for pytest.
 """
-import pytest
 import sys
 import os
 

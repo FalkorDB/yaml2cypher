@@ -9,10 +9,10 @@ from yaml2cypher.converter import YAML2Cypher
 
 def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
     """Parse command line arguments.
-    
+
     Args:
         args: Optional list of command line arguments
-        
+
     Returns:
         Parsed arguments namespace
     """
@@ -25,24 +25,24 @@ def parse_args(args: Optional[List[str]] = None) -> argparse.Namespace:
 
 def main(args: Optional[List[str]] = None) -> int:
     """Main entry point for the command-line interface.
-    
+
     Args:
         args: Optional list of command line arguments
-        
+
     Returns:
         Exit code (0 for success, non-zero for errors)
     """
     parsed_args = parse_args(args)
-    
+
     # Configure logging based on verbosity
     log_level = logging.DEBUG if parsed_args.verbose else logging.INFO
     logging.basicConfig(level=log_level)
-    
+
     # Determine output filename if not specified
     if not parsed_args.output:
         base_name = os.path.splitext(parsed_args.yaml_file)[0]
         parsed_args.output = f"{base_name}.cypher"
-    
+
     try:
         converter = YAML2Cypher()
         cypher_statements = converter.yaml_file_to_cypher(parsed_args.yaml_file)
