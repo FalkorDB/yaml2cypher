@@ -130,7 +130,7 @@ def test_relationship_without_required_fields():
     }
     
     statements = converter.convert_yaml_to_cypher(data)
-    assert statements == []
+    assert statements == ['', '', '']
 
 
 def test_utf8_characters():

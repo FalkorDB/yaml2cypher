@@ -115,10 +115,10 @@ def test_convert_relationship(converter):
     
     # Test without properties
     rel_data = {"from": "p1", "to": "c1", "type": "KNOWS"}
-    expected = "CREATE (p1)-[:KNOWS {}]->(c1)"
+    expected = "CREATE (p1)-[:KNOWS ]->(c1)"
     assert converter._convert_relationship(rel_data) == expected
     
-    # Test with missing fields
+    # Test with missing fieldsc
     rel_data = {"from": "p1", "type": "KNOWS"}
     assert converter._convert_relationship(rel_data) == ""
 

@@ -1,0 +1,12 @@
+CREATE (person1:Person {name: 'John Doe', age: 30, email: 'john@example.com', interests: ['Cycling', 'Photography', 'Cooking'], address: {street: '123 Main St', city: 'San Francisco', zip: '94105'}});
+CREATE (person2:Person {name: 'Jane Smith', age: 28, email: 'jane@example.com', interests: ['Reading', 'Travel'], address: {street: '456 Oak Ave', city: 'New York', zip: '10001'}});
+CREATE (company1:Company:Organization {name: 'Tech Solutions Inc.', founded: 2010, website: 'https://techsolutions.example.com', locations: ['San Francisco', 'New York', 'London']});
+CREATE (product1:Product {name: 'Super Software', version: '1.0.2', price: 99.99, features: ['Feature A', 'Feature B', 'Feature C']});
+CREATE (project1:Project {name: 'Website Redesign', status: 'In Progress', deadline: '2023-12-31', budget: 50000, priority: 'High'});
+CREATE (person1)-[:KNOWS {since: 2018, strength: 0.8, meetups: [{date: '2020-01-15', location: 'Coffee Shop'}, {date: '2020-06-30', location: 'Conference'}]}]->(person2);
+CREATE (person1)-[:WORKS_FOR {position: 'Software Engineer', since: 2019, salary: 120000, department: 'Engineering', manager: 'Bob Johnson'}]->(company1);
+CREATE (person2)-[:WORKS_FOR {position: 'Data Scientist', since: 2020, salary: 125000, department: 'Data Science'}]->(company1);
+CREATE (company1)-[:PRODUCES {released: '2022-05-10', team_size: 15}]->(product1);
+CREATE (person1)-[:WORKS_ON {role: 'Lead Developer', hours_per_week: 20}]->(project1);
+CREATE (person2)-[:WORKS_ON {role: 'Data Analyst', hours_per_week: 15}]->(project1);
+CREATE (product1)-[:PART_OF {module: 'Core Component'}]->(project1);
